@@ -18,6 +18,7 @@ func main() {
 
 	if os.Getenv("HTTP2") != "" {
 		log.Printf("starting http2 server...")
+		//net/http.Server is a http1.1 server with optional http2 support
 		log.Fatal(http.ListenAndServeTLS(":9002", "./ssl/localhost.crt", "./ssl/localhost.key", e))
 	} else {
 		log.Printf("starting http server...")
