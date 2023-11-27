@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title>{{ .DemoName }}</title>
+</head>
+<body>
+    <h1 style="position: fixed;top:0px;right:100px;background:yellow;">{{ .DemoName }}</h1>
+    <table id="img-table"></table>
+    <script>
+        let tableContent;
+        for (var i = 0; i < 15; i++) {
+            tableContent += '<tr>';
+            for (var j = 0; j < 15; j++) {
+                tableContent += '<td><img src="/images/' + j + '' + i + '.jpg" width="133" height="88"></td>';
+            }
+            tableContent += '</tr>';
+        }
+
+        //set table content
+        document.getElementById('img-table').innerHTML = tableContent
+    </script>
+</body>
+</html>
