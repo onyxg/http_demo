@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"runtime"
 )
 
 func main() {
@@ -15,6 +16,9 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(delayImageMiddleware)
 	e.Static("/", "static")
+
+	e.GET("/health", healthHandler)
+	e.GET("/metrics", metricsHandler)
 
 	if os.Getenv("HTTP2") != "" {
 		log.Printf("starting http2 server...")
@@ -35,4 +39,20 @@ func delayImageMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		return next(c)
 	}
+}
+
+func healthHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "OK")
+}
+
+func metricsHandler(c echo.Context) error {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	metrics := map[string]uint64{
+		"Alloc":      m.Alloc,
+		"TotalAlloc": m.TotalAlloc,
+		"Sys":        m.Sys,
+		"NumGC":      uint64(m.NumGC),
+	}
+	return c.JSON(http.StatusOK, metrics)
 }
