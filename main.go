@@ -16,6 +16,8 @@ func main() {
 	e.Use(delayImageMiddleware)
 	e.Static("/", "static")
 
+	e.GET("/health", healthHandler)
+
 	if os.Getenv("HTTP2") != "" {
 		log.Printf("starting http2 server...")
 		//net/http.Server is a http1.1 server with optional http2 support
@@ -35,4 +37,8 @@ func delayImageMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		return next(c)
 	}
+}
+
+func healthHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "OK")
 }
